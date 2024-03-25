@@ -1,4 +1,4 @@
-namespace MauiAppListaCompras.Views;
+namespace MauiAppListaCompras.View;
 
 using MauiAppListaCompras.Models;
 
@@ -13,22 +13,19 @@ public partial class NovoProduto : ContentPage
     {
 		try
 		{
-			Produto produto_anexado = BindingContext as Produto;
-
 			Produto p = new Produto
 			{
-				Id = produto_anexado.Id,
 				Descricao = txt_descricao.Text,
 				Quantidade = Convert.ToDouble(txt_quantidade.Text),
 				Preco = Convert.ToDouble(txt_preco.Text),
 			};
-
-			await App.Db.Update(p);
-			await DisplayAlert("Sucesso!", "Produto Editado!", "OK");
-		}
+            await App.Db.Insert(p);
+            await DisplayAlert("Sucesso!", "Produto inserido", "OK");
+            await Navigation.PushAsync(new MainPage());
+        }
 		catch (Exception ex)
 		{
-			await DisplayAlert("Ops", ex.Message, "Fechar");
+			await DisplayAlert("Ops", ex.Message, "OK");
 		}
     }
 }

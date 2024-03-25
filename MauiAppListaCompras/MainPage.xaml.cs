@@ -20,37 +20,32 @@ namespace MauiAppListaCompras
             DisplayAlert("Somatória", msg, "Fechar");
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             if (lista_produtos.Count == 0)
             {
-                Task.Run(async () =>
-                {
-                    List<Produto> tmp = await App.Db.GetAll();
-                    foreach (Produto p in tmp)
-                    {
-                        lista_produtos.Add(p);
-                    }
-                }); // Fecha Task
-            } // Fecha if
-        }
-        private async void ToolbarItem_Clicked_Add(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync("//NovoProduto");
-        }
-
-        private void txt_search_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            string q = e.NewTextValue;
-            lista_produtos.Clear();
-            Task.Run(async () =>
-            {
-                List<Produto> tmp = await App.Db.Search(q);
+                List<Produto> tmp = await App.Db.GetAll();
                 foreach (Produto p in tmp)
                 {
                     lista_produtos.Add(p);
                 }
-            }); // Fecha Task
+            } // Fecha if
+        }
+        private async void ToolbarItem_Clicked_Add(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new View.NovoProduto());
+        }
+
+        private async void txt_search_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string q = e.NewTextValue;
+            lista_produtos.Clear();
+
+            List<Produto> tmp = await App.Db.Search(q);
+            foreach (Produto p in tmp)
+            {
+                lista_produtos.Add(p);
+            }
         } // Fecha método de evento
 
         private void ref_carregando_Refreshing(object sender, EventArgs e)
@@ -69,20 +64,27 @@ namespace MauiAppListaCompras
 
         private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
+            Produto? p = e.SelectedItem as Produto;
 
+            Navigation.PushAsync(new Views.EditarProduto
+            {
+                BindingContext = p,
+            });
         }
 
         private async void MenuItem_Clicked_Remover(object sender, EventArgs e)
         {
-            MenuItem selecionado = (MenuItem)sender;
-            Produto p = selecionado.BindingContext as Produto;
             try
             {
+                MenuItem selecionado = (MenuItem)sender;
+                Produto p = selecionado.BindingContext as Produto;
+
                 bool confirm = await DisplayAlert("Tem certeza?", "Remover Produto?", "Sim", "Cancelar");
                 if (confirm)
                 {
                     await App.Db.Delete(p.Id);
                     await DisplayAlert("Sucesso!", "Produto Removido", "OK");
+                    lista_produtos.Remove(p);
                 }
             }
             catch (Exception ex)

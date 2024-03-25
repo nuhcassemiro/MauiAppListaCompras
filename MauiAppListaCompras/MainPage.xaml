@@ -6,15 +6,15 @@
 
     <ContentPage.Resources>
         <Style TargetType="Label">
-            <Setter Property="VerticalTextAligment" Value="Center" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
             <Setter Property="VerticalOptions" Value="FillAndExpand" />
         </Style>
     </ContentPage.Resources>
 
-    <ContentPage.TollbarItems>
+    <ContentPage.ToolbarItems>
         <ToolbarItem Text="Somar" Clicked="ToolbarItem_Clicked_Somar"/>
         <ToolbarItem Text="Adicionar" Clicked="ToolbarItem_Clicked_Add" />
-    </ContentPage.TollbarItems>
+    </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <VerticalStackLayout>
@@ -36,10 +36,11 @@
                             <ViewCell.ContextActions>
                                 <MenuItem Text="Remover" Clicked="MenuItem_Clicked_Remover"/>
                             </ViewCell.ContextActions>
-                            <Grid RowDefinitions="Auto" ColumnDefinitions="*, Auto, Auto">
+                            <Grid ColumnDefinitions="3*, *, *, *">
                                 <Label Grid.Row="0" Grid.Column="0" Text="{Binding Descricao}"/>
                                 <Label Grid.Row="0" Grid.Column="1" Text="{Binding Quantidade}"/>
                                 <Label Grid.Row="0" Grid.Column="2" Text="{Binding Preco}"/>
+                                <Label Grid.Row="0" Grid.Column="3" Text="{Binding Total}"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
@@ -47,5 +48,4 @@
             </ListView>
         </VerticalStackLayout>
     </ContentPage.Content>
-    
 </ContentPage>
